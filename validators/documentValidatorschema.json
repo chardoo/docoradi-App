@@ -1,0 +1,31 @@
+{
+    "title": "document",
+    "description": "document field",
+     "required" :["userId", "companyName"],
+    "type":"object",
+    "properties": {
+                    "companyName":{
+                      "type":"string", "maxLength": 128
+                     },
+                     "firstName":{
+                         "type":"string", "maxLength": 128
+                     },
+                     "lastName":{
+                         "type":"string", "maxLength": 128
+                     },
+                     "billDate":{
+                         "type":"string", "format": "date"
+                     },                            
+                     "dueDate":{
+                         "type":"string", "format": "date"
+                     },
+                     "amountDue":{
+                         "type":"number", "minimum":1
+                     },
+                     "balanceDue":{
+                      "type":"number", "minimum": 1
+                    },
+                    "userId" : {"type": "string", "minimum": 1}
+
+    }   
+ }
