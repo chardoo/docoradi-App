@@ -4,10 +4,18 @@ const db = require('../../libs/data/db').getDB();
 const generateJwtToken =  require('../../utils/jwt_Utils')
 const registerUser = async (req, res, next) => {
     try {
-      const { firstName, email, mobile, role, password}  =  req.body  
+      const { firstName, email, mobile, lastName, password}  =  req.body  
       const { hashedToken, accessToken } = await accessTokenUtils.generateUserAccessToken(password);
+      const role = "user"
+      const userFound = db.collection(process.env.USERS);
+      const adminExists = userFound.where('email', '==', email)
+      const userExists =  await adminExists.get();
+        if (userExists) {
+        throw new BadRequestError('email already exits');
+      }
       const newData = {
           firstName:firstName,
+          lastName:lastName,
           email:email,
           role:role,
           mobile:mobile,
@@ -26,29 +34,29 @@ const registerUser = async (req, res, next) => {
   const loginUser = async (req, res, next) =>{
       try{
           const{email, password} =  req.body
-         
           const userFound = db.collection(process.env.USERS);
           const adminExists = userFound.where('email', '==', email)
           const userExists =  await adminExists.get();
-            if (!userExists) {
-            throw new BadRequestError('Login Failed!');
-          }
-          let isValidPassword
+          const newobject ={};
          await  userExists.forEach(element => {
-          isValidPassword = accessTokenUtils.checkAccessToken(password, element.password);
+          Object.assign(newobject, element.data());
            });
 
+            if (Object.keys(newobject).length === 0) {
+            throw new BadRequestError('Login Failed!');
+          }
+          
+         const isValidPassword = await accessTokenUtils.checkAccessToken(password, newobject.password);
           if (!isValidPassword) {
             throw new BadRequestError('Login Failed');
           }
-      
-          const { jwtToken, expiration } = generateJwtToken(userExists.email, userExists.firstName,
-            userExists.role);
+          const { jwtToken, expiration } = await generateJwtToken(newobject.email, newobject.firstName,
+            newobject.role);
       
           return res.status(200).json({
-            email: userExists.email,
-            role: userExists.role,
-            name: userExists.firstName,
+            email: newobject.email,
+            role: newobject.role,
+            name: newobject.firstName,
             token: jwtToken,
             expiration,
           });

@@ -11,9 +11,9 @@ const generateUserAccessToken = async (password) => {
   return { accessToken, hashedToken };
 };
 
-const checkAccessToken = async (accessToken, hashedToken)=> {
-  const isValid = await bcrypt.compare(accessToken, hashedToken);
-  return isValid;
+const checkAccessToken = (accessToken, hashedToken)=> {
+  return  bcrypt.compare(accessToken, hashedToken);
+ 
 };
 
 module.exports = { generateUserAccessToken, checkAccessToken };

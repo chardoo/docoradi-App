@@ -27,5 +27,4 @@ app.get('/api/health', (req, res) => {
 
 app.use('/service/user', userRoutes);
 
-
 module.exports = app;
