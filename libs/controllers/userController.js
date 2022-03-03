@@ -4,15 +4,15 @@ const db = require('../../libs/data/db').getDB();
 const generateJwtToken =  require('../../utils/jwt_Utils')
 const registerUser = async (req, res, next) => {
     try {
-      const { firstName, email, mobile, lastName, password}  =  req.body  
+      const { firstName, email, mobile, lastName, password,}  =  req.body  
       const { hashedToken, accessToken } = await accessTokenUtils.generateUserAccessToken(password);
-      const role = "user"
-      const userFound = db.collection(process.env.USERS);
-      const adminExists = userFound.where('email', '==', email)
-      const userExists =  await adminExists.get();
-        if (userExists) {
-        throw new BadRequestError('email already exits');
-      }
+     const role = "user";
+      // const userFound = db.collection(process.env.USERS);
+      // const adminExists = userFound.where('email', '==', email)
+      // const userExists =  await adminExists.get();
+      //   if (userExists) {
+      //   throw new BadRequestError('email already exits');
+      // }
       const newData = {
           firstName:firstName,
           lastName:lastName,
@@ -25,6 +25,7 @@ const registerUser = async (req, res, next) => {
       if (!response) {
         throw new Error('something went wrong');
       }
+      console.log(hashedToken);
       res.status(201).json(accessToken);
     } catch (err) {
       return Error('something went wrong');

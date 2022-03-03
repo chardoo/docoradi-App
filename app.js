@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
-
+const documentRoutes =  require('./routes/documentsRoutes')
 const app = express();
 
 app.use(bodyParser.json());
@@ -26,5 +26,6 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/service/user', userRoutes);
+app.use('/service/documents/', documentRoutes);
 
 module.exports = app;
