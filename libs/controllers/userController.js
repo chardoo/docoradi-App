@@ -34,7 +34,8 @@ const registerUser = async (req, res, next) => {
   
   const loginUser = async (req, res, next) =>{
       try{
-          const{email, password} =  req.body
+          const {email, password} =  req.body
+          console.log('email', email, 'password', password)
           const userFound = db.collection(process.env.USERS);
           const adminExists = userFound.where('email', '==', email)
           const userExists =  await adminExists.get();
