@@ -39,9 +39,9 @@ const personalUploadedDocuments = async (req, res, next) =>{
           customRanking: ["desc(createdTime)"]
       });
       const {userId} = req.body;
-      console.log(userId);
+    
       const documents  =  await personalIndex.search(userId)
-      console.log(documents);
+   
       if (!documents) {
         throw new Error('something went wrong try again');
       }
