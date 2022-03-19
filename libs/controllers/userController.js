@@ -25,7 +25,7 @@ const registerUser = async (req, res, next) => {
       if (!response) {
         throw new Error('something went wrong');
       }
-      console.log(hashedToken);
+      // console.log(hashedToken);
       res.status(201).json(accessToken);
     } catch (err) {
       return Error('something went wrong');

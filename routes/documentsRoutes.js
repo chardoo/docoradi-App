@@ -4,6 +4,7 @@ const router = express.Router();
 
 
 router.post('/initialDocuments', documentsController.initialDocuments);
+router.post('/personalUploads', documentsController.personalUploadedDocuments);
 router.post('/search', documentsController.searchDocuments);
 router.post('/viewLater', documentsController.viewLater);
 router.post('/markAsViewed', documentsController.markAsViewed);
