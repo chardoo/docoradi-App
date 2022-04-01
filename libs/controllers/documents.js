@@ -21,7 +21,7 @@ const initialDocuments = async (req, res, next) =>{
           filters: `(userId:${userId})`,
           
         })
-        // console.log(documents);
+        // console.log(documents); 
         if (!documents) {
           throw new Error('something went wrong try again');
         }
@@ -61,7 +61,6 @@ const searchDocuments = async (req, res, next) => {
     if (!documents) {
       throw new Error('something went wrong try again');
     }
-    console.log(documents);
     res.status(200).json(documents.hits);
   } catch (error) {
     next(error);
