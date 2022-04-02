@@ -39,7 +39,7 @@ const personalUploadedDocuments = async (req, res, next) =>{
           customRanking: ["desc(createdTime)"]
       });
       const {userId} = req.body;
-    
+      console.log(userId);
       const documents  =  await personalIndex.search(userId)
    
       if (!documents) {
@@ -71,15 +71,16 @@ const searchDocuments = async (req, res, next) => {
 const viewLater = async(req, res, next) =>{
   try {
     const {objectID} = req.body
+    console.log('viewLater with id', objectID)
     const docRef = await db
       .collection(process.env.DOCUMENTS_COLLECTION)
       .doc(objectID);
-    const updatedDoc = await docRef.update({isLater: true});;
+    const updatedDoc = await docRef.update({isLater: true});
     if (!updatedDoc) {
       throw new Error('something went wrong when trying to update document');
     }
     res.status(200).json('ok');
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 }
@@ -95,7 +96,7 @@ const removeFromViewLater = async(req, res, next) =>{
       throw new Error('something went wrong when trying to update document');
     }
     res.status(200).json('ok');
-  } catch (err) {
+  } catch (error) {
     next(error);
   }
 }
@@ -110,8 +111,8 @@ const markAsViewed = async(req, res, next) =>{
     if (!updatedDoc) {
       throw new Error('something went wrong when trying to update document');
     }
-    res.status(200).json('ok');
-  } catch (err) {
+    res.status(200).json('ok')
+  } catch (error) {
     next(error);
   }
 }
