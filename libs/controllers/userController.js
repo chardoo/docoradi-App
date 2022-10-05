@@ -2,6 +2,7 @@ require('dotenv').config();
 const accessTokenUtils = require('../../utils/usersAccessToken');
 const db = require('../../libs/data/db').getDB();
 const generateJwtToken = require('../../utils/jwt_Utils');
+
 const registerUser = async (req, res, next) => {
   try {
     const { email, mobile, password } = req.body;
@@ -17,8 +18,6 @@ const registerUser = async (req, res, next) => {
     //   throw new BadRequestError('email already exits');
     // }
     const newData = {
-      // firstName:firstName,
-      // lastName:lastName,
       email: email,
       role: role,
       mobile: mobile,
@@ -34,11 +33,9 @@ const registerUser = async (req, res, next) => {
     return Error('something went wrong');
   }
 };
-
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log('email', email, 'password', password);
     const userFound = db.collection(process.env.USERS);
     console.log(userFound);
     const adminExists = userFound.where('email', '==', email);
@@ -62,14 +59,14 @@ const loginUser = async (req, res, next) => {
     }
     const { jwtToken, expiration } = await generateJwtToken(
       newobject.email,
-      newobject.firstName,
+      newobject.mobile,
       newobject.role
     );
 
     return res.status(200).json({
       email: newobject.email,
       role: newobject.role,
-      name: newobject.firstName,
+      mobile: newobject.mobile,
       token: jwtToken,
       expiration,
     });
