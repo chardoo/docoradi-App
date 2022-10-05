@@ -109,7 +109,7 @@ const getfilesByMimeType = async (req, res, next) => {
 
     const { userId, mimeType } = req.body;
 
-    const documents = await index.search(userId, {
+    const documents = await index.search(mimeType, {
       filters: `(userId:${userId})`,
       attributesToRetrieve: ['*'],
     });
