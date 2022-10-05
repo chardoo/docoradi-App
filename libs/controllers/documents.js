@@ -109,6 +109,18 @@ const getfilesByMimeType = async (req, res, next) => {
 
     const { userId, mimeType } = req.body;
 
+    if (mimeType === 'all') {
+      const documents = await index.search(userId, {
+        filters: `(userId:${userId})`,
+        attributesToRetrieve: ['*'],
+      });
+
+      if (!documents) {
+        throw new Error('something went wrong try again');
+      }
+      res.status(200).json(documents.hits);
+    }
+
     const documents = await index.search(mimeType, {
       filters: `(userId:${userId})`,
       attributesToRetrieve: ['*'],
