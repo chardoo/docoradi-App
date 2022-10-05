@@ -24,6 +24,7 @@ const initialDocuments = async (req, res, next) => {
     console.log(userId);
     const documents = await index.search(userId, {
       filters: `(userId:${userId})`,
+      attributesToRetrieve: ['*'],
     });
     // console.log(documents);
     if (!documents) {
