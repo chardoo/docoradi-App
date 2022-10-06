@@ -62,6 +62,7 @@ const searchDocuments = async (req, res, next) => {
     const { userId, searchIndex } = req.body;
     const documents = await index.search(searchIndex, {
       filters: `(userId:${userId})`,
+      attributesToRetrieve: ['*'],
     });
     if (!documents) {
       throw new Error('something went wrong try again');
