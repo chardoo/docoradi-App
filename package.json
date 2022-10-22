@@ -24,6 +24,7 @@
         "dotenv": "~4.0.0",
         "express": "^4.17.1",
         "express-json-validator-middleware": "^2.2.1",
+        "fetch-node": "^0.0.1",
         "file-base64": "^1.0.0",
         "firebase-admin": "^10.0.2",
         "firebase-functions": "^3.16.0",

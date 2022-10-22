@@ -17,9 +17,9 @@ const personalIndex = client.initIndex('personalDocuments');
 
 const initialDocuments = async (req, res, next) => {
   try {
-    index.setSettings({
-      customRanking: ['desc(createdTime)'],
-    });
+    // index.setSettings({
+    //   customRanking: ['desc(createdTime)'],
+    // });
     const { userId } = req.body;
     console.log(userId);
     const documents = await index.search(userId, {
@@ -38,12 +38,12 @@ const initialDocuments = async (req, res, next) => {
 
 const personalUploadedDocuments = async (req, res, next) => {
   try {
-    personalIndex.setSettings({
-      customRanking: ['desc(createdTime)'],
-      // attributesToRetrieve: [
-      //   'fileName'
-      // ]
-    });
+    // personalIndex.setSettings({
+    //   customRanking: ['desc(createdTime)'],
+    //   // attributesToRetrieve: [
+    //   //   'fileName'
+    //   // ]
+    // });
     const { userId } = req.body;
     console.log(userId);
     const documents = await personalIndex.search(userId);
@@ -76,9 +76,9 @@ const searchDocuments = async (req, res, next) => {
 
 const getfileTypes = async (req, res, next) => {
   try {
-    index.setSettings({
-      customRanking: ['desc(createdTime)'],
-    });
+    // index.setSettings({
+    //   customRanking: ['desc(createdTime)'],
+    // });
     const { userId } = req.body;
     const documents = await index.search(userId, {
       filters: `(userId:${userId})`,
@@ -104,9 +104,9 @@ const getfileTypes = async (req, res, next) => {
 };
 const getfilesByMimeType = async (req, res, next) => {
   try {
-    index.setSettings({
-      customRanking: ['desc(createdTime)'],
-    });
+    // index.setSettings({
+    //   customRanking: ['desc(createdTime)'],
+    // });
 
     const { userId, mimeType } = req.body;
 
@@ -127,6 +127,31 @@ const getfilesByMimeType = async (req, res, next) => {
       attributesToRetrieve: ['*'],
     });
 
+    if (!documents) {
+      throw new Error('something went wrong try again');
+    }
+
+    res.status(200).json(documents.hits);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const filterDocuments = async (req, res, next) => {
+  try {
+    const { userId, companyName, documentType } = req.body;
+    console.log(documentType);
+    console.log(userId);
+    console.log(companyName);
+    const documents = await index.search(userId, {
+      //  filters: `companyName:${companyName}`,
+      //  filters: `documentType:${documentType} OR companyName:${companyName}`,
+      // filters:'companyName:richgroup',
+      // facetFilters: [`companyName:${companyName}`],
+      attributesToRetrieve: ['*'],
+    });
+
+    console.log('dsdsd', documents);
     if (!documents) {
       throw new Error('something went wrong try again');
     }
@@ -195,4 +220,5 @@ module.exports = {
   personalUploadedDocuments,
   getfileTypes,
   getfilesByMimeType,
+  filterDocuments,
 };

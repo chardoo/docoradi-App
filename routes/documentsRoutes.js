@@ -10,4 +10,5 @@ router.post('/markAsViewed', documentsController.markAsViewed);
 router.post('/removeFromViewedList', documentsController.removeFromViewLater);
 router.post('/getDocumentTypes', documentsController.getfileTypes);
 router.post('/getFilesByMimeTypes', documentsController.getfilesByMimeType);
+router.post('/filterdocuments', documentsController.filterDocuments);
 module.exports = router;
