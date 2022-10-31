@@ -17,7 +17,7 @@ const getDocumentTypes = async (req, res, next) => {
 
 const uploadDocumentTypes = async (req, res, next) => {
   try {
-    let URL = `${process.env.SERVICEURL}/service/docxon/personal`;
+    let URL = `${process.env.SERVICEURL}/service/docxon/`;
     const me = request(
       { url: URL, method: 'POST', json: true, body: req.body },
       function (err, results) {
