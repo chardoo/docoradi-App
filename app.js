@@ -13,7 +13,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(helmet());
 app.use(cors());
-
+app.use(
+  bodyParser.urlencoded({
+    limit: '50mb',
+    parameterLimit: 100000,
+    extended: true,
+  })
+);
 // Routes
 app.use('/', (req, res, next) => {
   console.log(
