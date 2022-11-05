@@ -1,4 +1,5 @@
 const algoliasearch = require('algoliasearch');
+const { filter } = require('lodash');
 const algoliaClient = algoliasearch(
   process.env.ALGOLIA_APPLICATION_ID,
   process.env.ALGOLIA_ADMIN_API_KEY_ID
@@ -17,9 +18,6 @@ const personalIndex = client.initIndex('personalDocuments');
 
 const initialDocuments = async (req, res, next) => {
   try {
-    // index.setSettings({
-    //   customRanking: ['desc(createdTime)'],
-    // });
     const { userId } = req.body;
     console.log(userId);
     const documents = await index.search(userId, {
@@ -38,12 +36,6 @@ const initialDocuments = async (req, res, next) => {
 
 const personalUploadedDocuments = async (req, res, next) => {
   try {
-    // personalIndex.setSettings({
-    //   customRanking: ['desc(createdTime)'],
-    //   // attributesToRetrieve: [
-    //   //   'fileName'
-    //   // ]
-    // });
     const { userId } = req.body;
     console.log(userId);
     const documents = await personalIndex.search(userId);
@@ -76,9 +68,6 @@ const searchDocuments = async (req, res, next) => {
 
 const getfileTypes = async (req, res, next) => {
   try {
-    // index.setSettings({
-    //   customRanking: ['desc(createdTime)'],
-    // });
     const { userId } = req.body;
     const documents = await index.search(userId, {
       filters: `(userId:${userId})`,
@@ -104,12 +93,7 @@ const getfileTypes = async (req, res, next) => {
 };
 const getfilesByMimeType = async (req, res, next) => {
   try {
-    // index.setSettings({
-    //   customRanking: ['desc(createdTime)'],
-    // });
-
     const { userId, mimeType } = req.body;
-
     if (mimeType === 'all') {
       const documents = await index.search(userId, {
         filters: `(userId:${userId})`,
@@ -139,13 +123,25 @@ const getfilesByMimeType = async (req, res, next) => {
 
 const filterDocuments = async (req, res, next) => {
   try {
-    const { userId, companyName, documentType } = req.body;
-    console.log(documentType);
-    console.log(userId);
+    // index.setSettings({
+    //   customRanking: ['desc(createdTime)'],
+    // });
+    const {
+      userId,
+      companyName,
+      documentType,
+      billDate,
+      accountNumber,
+    } = req.body;
+    console.log(billDate);
     console.log(companyName);
+    console.log(accountNumber);
+    console.log(userId);
+
+    const filters = `companyName:${companyName}`;
+    console.log(filters);
     const documents = await index.search(userId, {
-      //  filters: `companyName:${companyName}`,
-      //  filters: `documentType:${documentType} OR companyName:${companyName}`,
+      filters: `companyName:${companyName} AND billDate:${billDate} OR (accountNumber:${accountNumber})`,
       // filters:'companyName:richgroup',
       // facetFilters: [`companyName:${companyName}`],
       attributesToRetrieve: ['*'],
