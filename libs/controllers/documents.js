@@ -25,16 +25,11 @@ const initialDocuments = async (req, res, next) => {
       attributesToRetrieve: ['*'],
     });
 
-    const personalDocuments = await personalIndex.search(userId, {
-      filters: `(userId:${userId})`,
-      attributesToRetrieve: ['*'],
-    });
     // console.log(documents);
     if (!documents) {
       throw new Error('something went wrong try again');
     }
     const newDocuments = {
-      personal: personalDocuments.hits,
       sent: documents.hits,
     };
     res.status(200).json(newDocuments);
