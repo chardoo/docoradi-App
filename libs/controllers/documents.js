@@ -24,7 +24,12 @@ const initialDocuments = async (req, res, next) => {
       filters: `(userId:${userId})`,
       attributesToRetrieve: ['*'],
     });
-
+    console.log(documents);
+    const personalDocuments = await personalIndex.search(userId, {
+      filters: `(userId:${userId})`,
+      attributesToRetrieve: ['*'],
+    });
+    documents.hits.concat(personalDocuments.hits);
     // console.log(documents);
     if (!documents) {
       throw new Error('something went wrong try again');
