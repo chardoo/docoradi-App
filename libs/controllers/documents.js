@@ -96,10 +96,21 @@ const getfileTypes = async (req, res, next) => {
       filters: `(userId:${userId})`,
       attributesToRetrieve: ['mime'],
     });
-    // console.log(documents);
-    if (!documents) {
-      throw new Error('something went wrong try again');
-    }
+    const personaldocuments = await personalIndex.search(userId, {
+      filters: `(userId:${userId})`,
+      attributesToRetrieve: ['mime'],
+    });
+    const filteredpersonalDocuments = personaldocuments.hits.reduce(
+      (acc, current) => {
+        const x = acc.find((item) => item.mime === current.mime);
+        if (!x) {
+          return acc.concat([current]);
+        } else {
+          return acc;
+        }
+      },
+      []
+    );
     const filteredArr = documents.hits.reduce((acc, current) => {
       const x = acc.find((item) => item.mime === current.mime);
       if (!x) {
@@ -108,8 +119,16 @@ const getfileTypes = async (req, res, next) => {
         return acc;
       }
     }, []);
-    filteredArr.push({ mime: 'all', objectID: 'eusduf2323' });
-    res.status(200).json({ filteredArr });
+    // console.log(documents);
+    if (!filteredArr) {
+      throw new Error('something went wrong try again');
+    }
+
+    let mimetypes = [];
+    mimetypes = [...filteredArr];
+    const mimes = mimetypes.concat(filteredpersonalDocuments);
+    mimes.push({ mime: 'all', objectID: 'eusduf2323' });
+    res.status(200).json({ mimes });
   } catch (error) {
     next(error);
   }
