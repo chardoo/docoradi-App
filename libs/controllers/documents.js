@@ -100,18 +100,15 @@ const getfileTypes = async (req, res, next) => {
       filters: `(userId:${userId})`,
       attributesToRetrieve: ['mime'],
     });
-    const filteredpersonalDocuments = personaldocuments.hits.reduce(
-      (acc, current) => {
-        const x = acc.find((item) => item.mime === current.mime);
-        if (!x) {
-          return acc.concat([current]);
-        } else {
-          return acc;
-        }
-      },
-      []
-    );
-    const filteredArr = documents.hits.reduce((acc, current) => {
+
+    // console.log(documents);
+    if (!personaldocuments) {
+      throw new Error('something went wrong try again');
+    }
+    let mimetypes = [];
+    mimetypes = [...documents.hits];
+    const mimess = mimetypes.concat(personaldocuments.hits);
+    const mimes = mimess.reduce((acc, current) => {
       const x = acc.find((item) => item.mime === current.mime);
       if (!x) {
         return acc.concat([current]);
@@ -119,14 +116,6 @@ const getfileTypes = async (req, res, next) => {
         return acc;
       }
     }, []);
-    // console.log(documents);
-    if (!filteredArr) {
-      throw new Error('something went wrong try again');
-    }
-
-    let mimetypes = [];
-    mimetypes = [...filteredArr];
-    const mimes = mimetypes.concat(filteredpersonalDocuments);
     mimes.push({ mime: 'all', objectID: 'eusduf2323' });
     res.status(200).json({ mimes });
   } catch (error) {
@@ -136,28 +125,25 @@ const getfileTypes = async (req, res, next) => {
 const getfilesByMimeType = async (req, res, next) => {
   try {
     const { userId, mimeType } = req.body;
-    if (mimeType === 'all') {
-      const documents = await index.search(userId, {
-        filters: `(userId:${userId})`,
-        attributesToRetrieve: ['*'],
-      });
-
-      if (!documents) {
-        throw new Error('something went wrong try again');
-      }
-      res.status(200).json(documents.hits);
-    }
-
     const documents = await index.search(mimeType, {
       filters: `(userId:${userId})`,
       attributesToRetrieve: ['*'],
     });
+    const personaldocuments = await personalIndex.search(mimeType, {
+      filters: `(userId:${userId})`,
+      attributesToRetrieve: ['*'],
+    });
 
-    if (!documents) {
+    if (!personaldocuments) {
       throw new Error('something went wrong try again');
     }
+    let documentFoundBythisMimeType = [];
+    documentFoundBythisMimeType = [...documents];
+    const document = documentFoundBythisMimeType.concat(
+      filteredpersonalDocuments
+    );
 
-    res.status(200).json(documents.hits);
+    res.status(200).json(document);
   } catch (error) {
     next(error);
   }
