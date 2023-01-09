@@ -68,11 +68,22 @@ const searchDocuments = async (req, res, next) => {
       filters: `(userId:${userId})`,
       attributesToRetrieve: ['*'],
     });
+
+    const personalDocuments = await personalIndex.search(searchIndex, {
+      filters: `(userId:${userId})`,
+      attributesToRetrieve: ['*'],
+    });
+
+    documents.hits.concat(personalDocuments.hits);
+    let documentdifkfd = [];
+    documentdifkfd = [...documents.hits];
+    const newdoc = documentdifkfd.concat(personalDocuments.hits);
+
     if (!documents) {
       throw new Error('something went wrong try again');
     }
 
-    res.status(200).json(documents.hits);
+    res.status(200).json(newdoc);
   } catch (error) {
     next(error);
   }
