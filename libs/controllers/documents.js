@@ -138,12 +138,12 @@ const getfilesByMimeType = async (req, res, next) => {
       throw new Error('something went wrong try again');
     }
     let documentFoundBythisMimeType = [];
-    documentFoundBythisMimeType = [...documents];
-    const document = documentFoundBythisMimeType.concat(
-      filteredpersonalDocuments
+    documentFoundBythisMimeType = [...documents.hits];
+    const documentFound = documentFoundBythisMimeType.concat(
+      personaldocuments.hits
     );
 
-    res.status(200).json(document);
+    res.status(200).json(documentFound);
   } catch (error) {
     next(error);
   }
