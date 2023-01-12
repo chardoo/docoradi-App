@@ -19,6 +19,12 @@ const personalIndex = client.initIndex('personalDocuments');
 const initialDocuments = async (req, res, next) => {
   try {
     const { userId } = req.body;
+    index.setSettings({
+      ranking: ['desc(createdTime)'],
+    });
+    personalIndex.setSettings({
+      ranking: ['desc(createdTime)'],
+    });
     console.log(userId);
     const documents = await index.search(userId, {
       filters: `(userId:${userId})`,
