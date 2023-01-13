@@ -13,8 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(helmet());
 app.use(cors());
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: true }));
+const maxRequestBodySize = '50mb';
+app.use(express.json({ limit: maxRequestBodySize }));
+app.use(express.urlencoded({ limit: maxRequestBodySize }));
 // Routes
 app.use('/', (req, res, next) => {
   console.log(
