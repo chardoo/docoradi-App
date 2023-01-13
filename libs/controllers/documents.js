@@ -15,16 +15,16 @@ const db = require('../../libs/data/db').getDB();
 const index = client.initIndex('documents');
 
 const personalIndex = client.initIndex('personalDocuments');
-
+index.setSettings({
+  ranking: ['desc(timestamp)'],
+});
+personalIndex.setSettings({
+  ranking: ['desc(timestamp)'],
+});
 const initialDocuments = async (req, res, next) => {
   try {
     const { userId } = req.body;
-    index.setSettings({
-      ranking: ['desc(createdTime)'],
-    });
-    personalIndex.setSettings({
-      ranking: ['desc(createdTime)'],
-    });
+
     console.log(userId);
     const documents = await index.search(userId, {
       filters: `(userId:${userId})`,
