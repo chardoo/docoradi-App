@@ -8,14 +8,17 @@ const documentRoutes = require('./routes/documentsRoutes');
 const documentTypesRoutes = require('./routes/documentsTypes');
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(helmet());
 app.use(cors());
 const maxRequestBodySize = '50mb';
-app.use(express.json({ limit: maxRequestBodySize }));
-app.use(express.urlencoded({ limit: maxRequestBodySize }));
+// app.use(express.json({ limit: maxRequestBodySize }));
+// app.use(express.urlencoded({ limit: maxRequestBodySize }));
+
+app.use(bodyParser.json({ limit: '50mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // Routes
 app.use('/', (req, res, next) => {
   console.log(
