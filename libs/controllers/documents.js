@@ -67,7 +67,7 @@ const personalUploadedDocuments = async (req, res, next) => {
   }
 };
 
-const sendDocuments = async (req, res, next) => {
+const sentDocuments = async (req, res, next) => {
   try {
     const { userId } = req.body;
     const documents = await index.search(userId);
@@ -250,7 +250,7 @@ module.exports = {
   markAsViewed,
   removeFromViewLater,
   personalUploadedDocuments,
-  sendDocuments,
+  sentDocuments,
   getfileTypes,
   getfilesByMimeType,
   filterDocuments,
