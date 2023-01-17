@@ -67,6 +67,20 @@ const personalUploadedDocuments = async (req, res, next) => {
   }
 };
 
+const sendDocuments = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const documents = await index.search(userId);
+
+    if (!documents) {
+      throw new Error('something went wrong try again');
+    }
+    res.status(200).json(documents.hits);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const searchDocuments = async (req, res, next) => {
   try {
     const { userId, searchIndex } = req.body;
@@ -157,9 +171,6 @@ const getfilesByMimeType = async (req, res, next) => {
 
 const filterDocuments = async (req, res, next) => {
   try {
-    // index.setSettings({
-    //   customRanking: ['desc(createdTime)'],
-    // });
     const {
       userId,
       companyName,
@@ -167,21 +178,14 @@ const filterDocuments = async (req, res, next) => {
       billDate,
       accountNumber,
     } = req.body;
-    console.log(billDate);
-    console.log(companyName);
-    console.log(accountNumber);
-    console.log(userId);
 
     const filters = `companyName:${companyName}`;
-    console.log(filters);
     const documents = await index.search(userId, {
       filters: `companyName:${companyName} AND billDate:${billDate} OR (accountNumber:${accountNumber})`,
       // filters:'companyName:richgroup',
       // facetFilters: [`companyName:${companyName}`],
       attributesToRetrieve: ['*'],
     });
-
-    console.log('dsdsd', documents);
     if (!documents) {
       throw new Error('something went wrong try again');
     }
@@ -195,7 +199,6 @@ const filterDocuments = async (req, res, next) => {
 const viewLater = async (req, res, next) => {
   try {
     const { objectID } = req.body;
-    console.log('viewLater with id', objectID);
     const docRef = await db
       .collection(process.env.DOCUMENTS_COLLECTION)
       .doc(objectID);
@@ -211,7 +214,6 @@ const viewLater = async (req, res, next) => {
 const removeFromViewLater = async (req, res, next) => {
   try {
     const { objectID } = req.body;
-    console.log('remove with id', objectID);
     const docRef = await db
       .collection(process.env.DOCUMENTS_COLLECTION)
       .doc(objectID);
@@ -248,6 +250,7 @@ module.exports = {
   markAsViewed,
   removeFromViewLater,
   personalUploadedDocuments,
+  sendDocuments,
   getfileTypes,
   getfilesByMimeType,
   filterDocuments,
