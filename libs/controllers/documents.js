@@ -56,7 +56,9 @@ const personalUploadedDocuments = async (req, res, next) => {
   try {
     const { userId } = req.body;
     console.log(userId);
-    const documents = await personalIndex.search(userId);
+    const documents = await personalIndex.search(userId, {
+      attributesToRetrieve: ['*'],
+    });
 
     if (!documents) {
       throw new Error('something went wrong try again');
@@ -70,7 +72,9 @@ const personalUploadedDocuments = async (req, res, next) => {
 const sentDocuments = async (req, res, next) => {
   try {
     const { userId } = req.body;
-    const documents = await index.search(userId);
+    const documents = await index.search(userId, {
+      attributesToRetrieve: ['*'],
+    });
 
     if (!documents) {
       throw new Error('something went wrong try again');
