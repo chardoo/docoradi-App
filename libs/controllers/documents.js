@@ -54,12 +54,17 @@ const initialDocuments = async (req, res, next) => {
 
 const personalUploadedDocuments = async (req, res, next) => {
   try {
-    const { userId } = req.body;
+    const { userId, page } = req.body;
+    const numberOfPage = page || 1;
     console.log(userId);
+    console.log(numberOfPage);
     const documents = await personalIndex.search(userId, {
       attributesToRetrieve: ['*'],
-    });
 
+      page: numberOfPage - 1,
+      hitsPerPage: 10,
+    });
+    console.log(documents);
     if (!documents) {
       throw new Error('something went wrong try again');
     }
